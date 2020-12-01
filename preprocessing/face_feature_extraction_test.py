@@ -124,9 +124,9 @@ def make_lip_image(lip_features):
     return lip_outline_image
 
 # Parameters
-original_video = '../obama.mp4'
-lips_video = '../clip2.mov'
-base_data_dir = '../data/data_10/'
+original_video = '/content/lip2lip_Research/preprocessing/src_video.mp4'
+lips_video = '/content/lip2lip_Research/preprocessing/lips_video.mp4'
+base_data_dir = '/content/lip2lip_Research/data/data_1'
 test_dir_1 = base_data_dir + 'test_1'
 stencil_path = base_data_dir + 'jaw_stencil'
 original_images_dir = base_data_dir + 'original_images'
@@ -134,7 +134,7 @@ num_test_images = 150
 
 # Load face detector
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+predictor = dlib.shape_predictor('/content/lip2lip_Research/preprocessing/shape_predictor_68_face_landmarks.dat')
 
 # Load video
 original_video_reader = skvideo.io.FFmpegReader(original_video)
@@ -214,3 +214,4 @@ for frame, lips_frame in itertools.izip(original_video_reader.nextFrame(), lips_
     
 np.save(base_data_dir + 'all_face_masks', all_face_masks)
 np.save(base_data_dir + 'all_transformation', all_transformations)
+print("test Done..")

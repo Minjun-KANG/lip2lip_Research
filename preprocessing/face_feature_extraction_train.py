@@ -141,29 +141,63 @@ def blackout_jaw(image, face_features, inv=False):
     else:
         cv2.fillPoly(image,[face_mask],(255,0,255))
 
-# Parameters
-video_path = '../obama3.mp4'
-train_dir = '../data/data_12/train/'
-num_test_images = 6000
+######################==== Redblock - preprocessing - Working Directory Set #1 ====###########################
+# Parameters, (Working Directory Set)
+video_path = '/content/lip2lip_Research/preprocessing/src_video.mp4'
+# source video path
+train_dir = '/content/lip2lip_Research/data/data_1/train/'
+# Path to the folder where train data is kept
+num_test_images = 1000 # num of test images
 
-# Load face detector
+##############################################################################################################
+
+
+
+######################==== Redblock - preprocessing - Load face detector #2 ====###########################
+# Load face detector (Load face detector)
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+# face detector ,, return type (dlib.fhog_object_detector)
+predictor = dlib.shape_predictor('/content/lip2lip_Research/preprocessing/shape_predictor_68_face_landmarks.dat')
+# extraction face feature point ,, return type (dlib.shape_predictor)
+###########################################################################################################
 
-# Load video and setup
-reader = skvideo.io.FFmpegReader(video_path)
+
+######################==== Redblock - preprocessing - Load video shape #3 ====###########################
+# Load video and setup (Load video shpae)
+reader = skvideo.io.FFmpegReader(video_path) #Load Video
+"""
+FFmepg is a tool that replaces video with frame.
+No input or input = 0, FPS = Full.
+"""
+#print(type(reader))
+#############################################################################################################
+
+
+######################==== Redblock - preprocessing - Viedo shape setup #4 ====###########################
+# Load video and setup (Video shape setup)
 video_shape = reader.getShape()
+# shape of video (Setup video #1)
 (num_frames, h, w, c) = video_shape
-print('Num frames ' + str(num_frames))
-frame_count = 0
+# video shape = (num of frames, height of frame, width of frame, channel of frame) (Setup video #2)
+frame_count = 0 #(Setup video #3)
+# frame count initialized
+print('Number of frames ' + str(num_frames))
+"""
+#User friendly
+print("Height of frame : "+str(h))
+print("Width of frame : "+str(w))
+print("Channel of frame : "+str(c))
+print(type(video_shape))
+"""
+##########################################################################################################
 
 for frame in reader.nextFrame():
-    if frame_count >= num_test_images:
+    if frame_count >= num_test_images: # when excution number is larger than test img num
         break
-    if frame_count % 100 == 0:
-        print('On frame ' + str(frame_count) + ' of ' + str(num_frames))
-    face_image = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-    faces = detector(frame, 1)
+    if frame_count % 10 == 0: # when frame count is 10 times 
+        print('On frame ' + str(frame_count) + ' of ' + str(num_frames)) # print portion of excuted frame
+    face_image = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR) # face image translation RGB to BRG
+    faces = detector(frame, 1) # face detection of frame using oversampling
 
     if len(faces) > 1:
         print('DETECTED MORE THAN ONE FACE')
@@ -172,41 +206,46 @@ for frame in reader.nextFrame():
         print('DETECTED NO FACES')
         continue
 
-    # Extract face features
-    principal_face = faces[0]
-    shape = predictor(frame, principal_face)
+    # Extract face features(Face features extraction)
+    principal_face = faces[0] # principal face 
+    shape = predictor(frame, principal_face) # extraction face feature point in principal face
 
-    # Get Crop Bounds
+    # Get Crop Bounds (Get about a cut boundary)
     leftmost_face_feature, rightmost_face_feature, topmost_face_feature, lowermost_face_feature = get_crop_bounds(principal_face, shape)
 
-    # Save face features in np array
-    lip_features = np.zeros((20,2))
-    face_features = []
-    face_features = np.zeros((68, 2))
+    # Save face features in np array (Save face features)
+    lip_features = np.zeros((20,2)) # allocation lip features matrix
+    face_features = [] 
+    face_features = np.zeros((68, 2)) # allocation face features matrix
     for i in range(0, 68):
-        feature = shape.part(i)
-        face_features[i,:] = np.array([feature.x, feature.y])
-    face_features = face_features.astype(int)
-    lip_features = face_features[48:,:]
+        feature = shape.part(i) # face feature extraction
+        face_features[i,:] = np.array([feature.x, feature.y]) # init face feature matrix
+    face_features = face_features.astype(int) # dace feature data type change to integer
+    lip_features = face_features[48:,:] #  init lip feature matrix
 
-    # Blackout jaw and background
-    face_image_annotated = np.copy(face_image)
-    blackout_jaw(face_image_annotated, face_features)
-    face_image_annotated = blackout_background(face_image_annotated, face_features)
-    face_image = blackout_background(face_image, face_features)
+    # Blackout jaw and background (Blackout jaw and background)
+    face_image_annotated = np.copy(face_image) # face image copy
+    blackout_jaw(face_image_annotated, face_features) # blackout jaw image
+    face_image_annotated = blackout_background(face_image_annotated, face_features) # blackout background image
+    face_image = blackout_background(face_image, face_features) # blackout background image
 
-    # Create lip outline image
+    # Create lip outline image (Create lip outline image)
     lips_outline_image = make_lip_image(lip_features)
     
     # Crop and Scale
-    face_image = face_image[topmost_face_feature:lowermost_face_feature,leftmost_face_feature:rightmost_face_feature]
-    face_image_annotated = face_image_annotated[topmost_face_feature:lowermost_face_feature,leftmost_face_feature:rightmost_face_feature]
-    face_image = cv2.resize(face_image, (256,256))
-    face_image_annotated = cv2.resize(face_image_annotated, (256,256))
-    lips_outline_image = cv2.resize(lips_outline_image, (256,256))
+    #(Image Cropping)
+    face_image = face_image[int(topmost_face_feature):int(lowermost_face_feature),int(leftmost_face_feature):int(rightmost_face_feature)] # crop face image
+    face_image_annotated = face_image_annotated[int(topmost_face_feature):int(lowermost_face_feature),int(leftmost_face_feature):int(rightmost_face_feature)] # crop face image
+
+    #(Image scaling)
+    face_image = cv2.resize(face_image, (256,256)) # resize face image
+    face_image_annotated = cv2.resize(face_image_annotated, (256,256)) # resize face image
+    lips_outline_image = cv2.resize(lips_outline_image, (256,256)) # resize outline image
 
     # Stack and save
-    stacked = np.concatenate((face_image, face_image_annotated, lips_outline_image), axis = 1)
-    cv2.imwrite(train_dir + str(frame_count) + '.png', stacked)
+    stacked = np.concatenate((face_image, face_image_annotated, lips_outline_image), axis = 1) # synthesis face image, face image annotated and lips outline image
+    cv2.imwrite(train_dir + str(frame_count) + '.png', stacked) # save synthesis image
 
-    frame_count += 1
+    frame_count += 1 # frame count +1
+
+print("Complete Train, Done..")

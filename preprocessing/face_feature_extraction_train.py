@@ -143,7 +143,7 @@ def blackout_jaw(image, face_features, inv=False):
 
 ######################==== Redblock - preprocessing - Working Directory Set #1 ====###########################
 # Parameters, (Working Directory Set)
-video_path = '/content/lip2lip_Research/preprocessing/src_video.mp4'
+video_path = '/content/lip2lip_Research/data/src_video.mp4'
 # source video path
 train_dir = '/content/lip2lip_Research/data/data_1/train/'
 # Path to the folder where train data is kept

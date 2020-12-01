@@ -124,9 +124,9 @@ def make_lip_image(lip_features):
     return lip_outline_image
 
 # Parameters
-original_video = '/content/lip2lip_Research/preprocessing/src_video.mp4'
-lips_video = '/content/lip2lip_Research/preprocessing/lips_video.mp4'
-base_data_dir = '/content/lip2lip_Research/data/data_1'
+original_video = '/content/lip2lip_Research/data/src_video.mp4'
+lips_video = '/content/lip2lip_Research/data/lips_video.mp4'
+base_data_dir = '/content/lip2lip_Research/data/data_1/'
 test_dir_1 = base_data_dir + 'test_1'
 stencil_path = base_data_dir + 'jaw_stencil'
 original_images_dir = base_data_dir + 'original_images'
@@ -149,7 +149,7 @@ frame_count = 0
 
 first = True
 orig_frame = None
-for frame, lips_frame in itertools.izip(original_video_reader.nextFrame(), lips_video_reader.nextFrame()):
+for frame, lips_frame in zip(original_video_reader.nextFrame(), lips_video_reader.nextFrame()):
     if first == True:
         first = False
         orig_frame = frame
@@ -194,9 +194,9 @@ for frame, lips_frame in itertools.izip(original_video_reader.nextFrame(), lips_
             lip_features_actor[i-48] = np.array([X_lips.x, X_lips.y])
 
     # Blackout jaw and background
-    blackout_jaw(face_image_annotated, face_features_original, True, leftmost_face_feature, topmost_face_feature, rightmost_face_feature, lowermost_face_feature, stencil_path + '/' + str(frame_count) + '.png')
+    blackout_jaw(face_image_annotated, face_features_original, True, int(leftmost_face_feature), int(topmost_face_feature), int(rightmost_face_feature), int(lowermost_face_feature), stencil_path + '/' + str(frame_count) + '.png')
     face_image_annotated = blackout_background(face_image_annotated, face_features_original, frame_count, all_face_masks)
-    face_image_annotated = face_image_annotated[topmost_face_feature:lowermost_face_feature,leftmost_face_feature:rightmost_face_feature]
+    face_image_annotated = face_image_annotated[int(topmost_face_feature):int(lowermost_face_feature),int(leftmost_face_feature):int(rightmost_face_feature)]
     
     # Draw Lips
     lips_outline_image = make_lip_image(lip_features_actor)

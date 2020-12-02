@@ -4,12 +4,12 @@ import numpy as np
 
 
 # Parameters
-base_dir = '../data/data_12'
-video_name = base_dir + '/test_2_video.mov'
-test_output_dir = base_dir + '/test_1_output/images/'
-face_masks = base_dir + '/all_face_masks.npy'
-transformation = base_dir + '/all_transformations.npy'
-original_images_dir = base_dir + '/original_images/'
+base_dir = '/content/lip2lip_Research/data/data_1/'
+video_name = "/content/lip2lip_Research/data/out_video.mp4"
+test_output_dir = base_dir + "test_1_output/images/"
+face_masks = base_dir + 'all_face_masks.npy'
+transformation = base_dir + 'all_transformations.npy'
+original_images_dir = base_dir + 'original_images/'
 all_images = glob.glob(test_output_dir+ '*-outputs.png')
 start = '_frame_'
 end = '-outputs.png'
@@ -39,7 +39,7 @@ for image in all_images_sorted:
     original_height = all_transformations[image_number,3] - all_transformations[image_number,2]
 
     if original_width != original_height:
-        print 'PROBLEM: original width and height do not match'
+        print('PROBLEM: original width and height do not match')
     model_output = cv2.resize(model_output, (int(original_width), int(original_height)))
     l = int(all_transformations[image_number,0])
     r = int(all_transformations[image_number,1])
@@ -65,15 +65,16 @@ for image in all_images_sorted:
     outline = cv2.imread(base_dir + '/test_1/' + str(image_number) + '.png')
     h, w, _ = outline.shape
     outline = cv2.resize(outline, (height * 3, height))
-    print original_frame.shape
-    print outline.shape
+    print(original_frame.shape)
+    print(outline.shape)
     original_frame = np.concatenate((original_frame, outline), axis=1)
 
-    # Add the new frame to the video
-    #cv2.imwrite('data_8/tmp/' + str(image_number) + '.png', original_frame)
+    #Add the new frame to the video
+    cv2.imwrite("/content/lip2lip_Research/data/" + str(image_number) + '.png', original_frame)
     
     video.write(original_frame)
     image_count+=1
 
 cv2.destroyAllWindows()
 video.release()
+print("\nDone..")

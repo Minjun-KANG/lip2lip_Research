@@ -128,7 +128,7 @@ original_video = '/content/lip2lip_Research/data/input_video/src_video.mp4'
 lips_video = '/content/lip2lip_Research/data/input_video/lips_video.mp4'
 base_data_dir = '/content/lip2lip_Research/data/test/test_pre_output/'
 test_dir_1 = base_data_dir + 'lips_feature'
-stencil_path = base_data_dir + 'base_featue'
+stencil_path = base_data_dir + 'base_feature'
 original_images_dir = base_data_dir + 'original_images'
 num_test_images = 150
 

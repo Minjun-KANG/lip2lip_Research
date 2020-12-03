@@ -143,9 +143,9 @@ def blackout_jaw(image, face_features, inv=False):
 
 ######################==== Redblock - preprocessing - Working Directory Set #1 ====###########################
 # Parameters, (Working Directory Set)
-video_path = '/content/lip2lip_Research/data/src_video.mp4'
+video_path = '/content/lip2lip_Research/data/input_video/src_video.mp4'
 # source video path
-train_dir = '/content/lip2lip_Research/data/data_1/train/'
+train_dir = '/content/lip2lip_Research/data/test/test_pre_output/'
 # Path to the folder where train data is kept
 num_test_images = 1000 # num of test images
 
@@ -231,11 +231,15 @@ for frame in reader.nextFrame():
 
     # Create lip outline image (Create lip outline image)
     lips_outline_image = make_lip_image(lip_features)
-    
+    topmost_face_feature = int(topmost_face_feature)
+    lowermost_face_feature = int(lowermost_face_feature)
+    leftmost_face_feature = int(leftmost_face_feature)
+    rightmost_face_feature = int(rightmost_face_feature)
+
     # Crop and Scale
     #(Image Cropping)
-    face_image = face_image[int(topmost_face_feature):int(lowermost_face_feature),int(leftmost_face_feature):int(rightmost_face_feature)] # crop face image
-    face_image_annotated = face_image_annotated[int(topmost_face_feature):int(lowermost_face_feature),int(leftmost_face_feature):int(rightmost_face_feature)] # crop face image
+    face_image = face_image[topmost_face_feature:lowermost_face_feature,leftmost_face_feature:rightmost_face_feature] # crop face image
+    face_image_annotated = face_image_annotated[topmost_face_feature:lowermost_face_feature,leftmost_face_feature:rightmost_face_feature] # crop face image
 
     #(Image scaling)
     face_image = cv2.resize(face_image, (256,256)) # resize face image

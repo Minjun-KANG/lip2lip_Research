@@ -4,12 +4,12 @@ import numpy as np
 
 
 # Parameters
-base_dir = '/content/lip2lip_Research/data/data_1/'
-video_name = "/content/lip2lip_Research/data/out_video.mp4"
-test_output_dir = base_dir + "test_1_output/images/"
-face_masks = base_dir + 'all_face_masks.npy'
-transformation = base_dir + 'all_transformations.npy'
-original_images_dir = base_dir + 'original_images/'
+base_dir = '/content/lip2lip_Research/data/test/'
+video_name = '/post/test_2_video.mov'
+test_output_dir = base_dir + '/test_color_output/images/'
+face_masks = base_dir + '/test_pre_output/all_face_masks.npy'
+transformation = base_dir + '/test_pre_output/all_transformation.npy'
+original_images_dir = base_dir + '/test_pre_output/original_images/'
 all_images = glob.glob(test_output_dir+ '*-outputs.png')
 start = '_frame_'
 end = '-outputs.png'
@@ -22,8 +22,8 @@ height, width, layers = frame.shape
 
 video = cv2.VideoWriter(video_name, -1, 30, (width + height * 3,height))
 
-all_face_masks = np.load(base_dir + '/all_face_masks.npy')
-all_transformations = np.load(base_dir + '/all_transformation.npy')
+all_face_masks = np.load(base_dir + 'test_pre_output/all_face_masks.npy')
+all_transformations = np.load(base_dir + 'test_pre_output/all_transformation.npy')
 image_count = 0
 for image in all_images_sorted:
     if image_count == 735:
@@ -62,7 +62,7 @@ for image in all_images_sorted:
     original_frame = original_frame * stencil_frame
     original_frame[t:b,l:r] = original_frame[t:b,l:r] + model_output
 
-    outline = cv2.imread(base_dir + '/test_1/' + str(image_number) + '.png')
+    outline = cv2.imread(base_dir + '/test_pre_output/lips_feature/' + str(image_number) + '.png')
     h, w, _ = outline.shape
     outline = cv2.resize(outline, (height * 3, height))
     print(original_frame.shape)
@@ -70,7 +70,7 @@ for image in all_images_sorted:
     original_frame = np.concatenate((original_frame, outline), axis=1)
 
     #Add the new frame to the video
-    cv2.imwrite("/content/lip2lip_Research/data/" + str(image_number) + '.png', original_frame)
+    cv2.imwrite("/content/lip2lip_Research/data/post/" + str(image_number) + '.png', original_frame)
     
     video.write(original_frame)
     image_count+=1

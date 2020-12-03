@@ -5,7 +5,7 @@ import numpy as np
 
 # Parameters
 base_dir = '/content/lip2lip_Research/data/test/'
-video_name = '/post/test_2_video.mov'
+video_name = '/post/test_video.mov'
 test_output_dir = base_dir + '/test_color_output/images/'
 face_masks = base_dir + '/test_pre_output/all_face_masks.npy'
 transformation = base_dir + '/test_pre_output/all_transformation.npy'

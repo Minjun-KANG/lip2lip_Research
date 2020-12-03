@@ -145,7 +145,7 @@ def blackout_jaw(image, face_features, inv=False):
 # Parameters, (Working Directory Set)
 video_path = '/content/lip2lip_Research/data/input_video/src_video.mp4'
 # source video path
-train_dir = '/content/lip2lip_Research/data/test/test_pre_output/'
+train_dir = '/content/lip2lip_Research/data/test/train_pre_output/'
 # Path to the folder where train data is kept
 num_test_images = 1000 # num of test images
 
